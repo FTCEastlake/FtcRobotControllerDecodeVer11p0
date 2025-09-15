@@ -21,18 +21,30 @@ public class BurrritoConstants {
             .mass(11.5)     // mass is in kilograms (1kg = 2.20462 lbs)
             .forwardZeroPowerAcceleration(-35.615389529881405)
             .lateralZeroPowerAcceleration(-49.091498732147805)
+
+            //**************************************************
+            // Translational PID Coefficients
+            //**************************************************
+            // The limit (in inches) at which the translational PIDF switches between the main and secondary
+            // translational PIDFs, if the secondary PID is active. Default Value: 3
+            // Ex) translationalPIDFSwitch(3) means
+            //        outside of 3 inches, the first PID is used to correct the robot,
+            //        inside of 3 inches, the second PID is used to correct the robot
+            .translationalPIDFSwitch(3)
+            // This is the coarse (large) PID tuning for translational (left/right) correction.
+            // This is just meant to correct the robot to and bring it within the secondary PID's range.
             .translationalPIDFCoefficients(new PIDFCoefficients(
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.03,
+                    0,
+                    0,
+                    0.015
             ))
-            .translationalPIDFSwitch(4)
+            // This is the fine (small) PID tuning for translational (left/right) correction.
             .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.4,
+                    0,
+                    0.005,
+                    0.0006
             ))
             .headingPIDFCoefficients(new PIDFCoefficients(
                     0.0,
