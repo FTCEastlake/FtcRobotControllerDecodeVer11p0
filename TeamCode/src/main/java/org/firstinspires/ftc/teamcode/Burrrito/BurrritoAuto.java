@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Burrrito;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -23,6 +25,7 @@ public class BurrritoAuto extends LinearOpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
+    private TelemetryManager telemetryM;
 
     // Poses are points on the field coordinate system that define the (x, y, heading) of your robot during the autonomous.
     // Pedro’s coordinate system spans an interval of [0, 144] on both the x and y axes,
@@ -150,6 +153,7 @@ public class BurrritoAuto extends LinearOpMode {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
         follower = BurrritoConstants.createFollower(hardwareMap);
 //        buildPaths();
