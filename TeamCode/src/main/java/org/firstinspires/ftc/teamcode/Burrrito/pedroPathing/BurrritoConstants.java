@@ -22,57 +22,96 @@ public class BurrritoConstants {
             .forwardZeroPowerAcceleration(-35.615389529881405)
             .lateralZeroPowerAcceleration(-49.091498732147805)
 
+
+            .useSecondaryHeadingPIDF(false)     // this is set to true by the call to secondaryHeadingPIDFCoefficients()
+            .useSecondaryDrivePIDF(false)       // this is set to true by the call to secondaryDrivePIDFCoefficients()
+
             //**************************************************
             // Translational PID Coefficients
+            // The translational PIDF ensures the robot follows a straight path without lateral deviation.
             //**************************************************
-            // The limit (in inches) at which the translational PIDF switches between the main and secondary
-            // translational PIDFs, if the secondary PID is active. Default Value: 3
-            // Ex) translationalPIDFSwitch(3) means
-            //        outside of 3 inches, the first PID is used to correct the robot,
-            //        inside of 3 inches, the second PID is used to correct the robot
-            .translationalPIDFSwitch(3)
-            // This is the coarse (large) PID tuning for translational (left/right) correction.
-            // This is just meant to correct the robot to and bring it within the secondary PID's range.
+            // Main (coarse) correction of left/right errors.
+            // Default Value: new PIDFCoefficients(0.1,0,0,0);
             .translationalPIDFCoefficients(new PIDFCoefficients(
-                    0.03,
-                    0,
-                    0,
+                    0.01,
+                    0.0,
+                    0.0,
+                    0.0
+            ))
+
+            // The limit at which the translational PIDF switches between the main and
+            // secondary translational PIDFs, if the secondary PID is active. Default Value: 3 (inches)
+            .translationalPIDFSwitch(3)
+
+            // Secondary translational PIDF coefficients (don't use integral).
+            // Default Value: new PIDFCoefficients(0.3, 0, 0.01, 0.015)
+            // Note: setting this automatically set useSecondaryTranslationalPIDF = true
+            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(
+                    0.3,
+                    0.0,
+                    0.01,
                     0.015
             ))
-            // This is the fine (small) PID tuning for translational (left/right) correction.
-            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(
-                    0.4,
-                    0,
-                    0.005,
-                    0.0006
-            ))
+
+
+            //**************************************************
+            // Heading PID Coefficients
+            // The heading PIDF corrects for the robot's heading while following the path.
+            //**************************************************
+            // Main (coarse) heading error PIDF coefficients
+            // Default Value: new PIDFCoefficients(1, 0, 0, 0.01);
             .headingPIDFCoefficients(new PIDFCoefficients(
+                    1.0,
                     0.0,
                     0.0,
-                    0.0,
-                    0.0
+                    0.1
             ))
+
+            // The limit at which the heading PIDF switches between the main and secondary heading PIDFs.
+            // Default Value: Math.PI / 20 (9 degrees)
+            .headingPIDFSwitch(Math.PI / 20)
+
+            // Secondary heading error PIDF coefficients.
+            // Default Value: new PIDFCoefficients(5, 0, 0.08, 0.01)
+            // Note: setting this automatically set useSecondaryHeadingPIDF = true
             .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(
+                    5.0,
                     0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.08,
+                    0.01
             ))
+
+
+            //**************************************************
+            // Drive PID Coefficients
+            // The Drive PIDF manages acceleration and braking along a path, ensuring smooth motion and minimizing overshoot.
+            //**************************************************
+            // Main (coarse) drive PIDF coefficients
+            // Default Value: new FilteredPIDFCoefficients(0.025, 0, 0.00001, 0.6, 0.01);
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.025,
+                    0,
+                    0.00001,
+                    0.6,
+                    0.01
             ))
+
+            // The limit at which the heading PIDF switches between the main and secondary drive PIDFs.
+            // Default Value: 20 (inches)
+            .drivePIDFSwitch(20)
+
+            // Secondary drive PIDF coefficients.
+            // Default Value: new FilteredPIDFCoefficients(0.02, 0, 0.000005, 0.6, 0.01)
+            // Note: setting this automatically set useSecondaryDrivePIDF = true
             .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.02,
+                    0,
+                    0.000005,
+                    0.6,
+                    0.01
             ))
-            .drivePIDFSwitch(15)
+
+            // Centripetal force to power scaling Default Value: 0.0005
             .centripetalScaling(0.0005);
 
     public static MecanumConstants driveConstants = new MecanumConstants()
