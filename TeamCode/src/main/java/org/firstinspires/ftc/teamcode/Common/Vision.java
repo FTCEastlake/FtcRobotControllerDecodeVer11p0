@@ -2,7 +2,10 @@ package org.firstinspires.ftc.teamcode.Common;
 
 import android.util.Size;
 
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.Path;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -15,6 +18,7 @@ import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class Vision {
 
@@ -69,18 +73,86 @@ public class Vision {
         _visionPortal = builder.build();
     }
 
-    public Pose getFirstDetectedTag() {
+    public AprilTagDetection getFirstDetectedTag() {
 
         List<AprilTagDetection> currentDetections = _aprilTag.getDetections();
         if (currentDetections.isEmpty())
             return null;
 
-        AprilTagPoseFtc ftcPose = currentDetections.get(0).ftcPose;
+        return currentDetections.get(0);
+    }
 
-        // Note1: ftcPose.y is pedroPose.x which represents front (+) and back (-)
-        // Note2: ftcPose.x is pedroPose.y which represents left (+) and right (-)
-        // Note2: ftcPose.yaw is in degrees. Negative is consistent with perdo Pose counter clockwise (+)
-        return new Pose(ftcPose.y, -ftcPose.x, -ftcPose.yaw);
+    public Pose AlignToAprilTag(Pose currentPose, double inchesBack) {
+
+        //_aprilTag = _vision.getFirstDetectedTag();
+        AprilTagDetection detectedTag  = getFirstDetectedTag();
+        if (detectedTag  == null)
+            return null;
+
+        //Pose currentPose = follower.getPose();
+
+        // Get AprilTag pose data
+        double range = detectedTag.ftcPose.range;       // inches
+        double bearing = detectedTag.ftcPose.bearing;   // degrees
+        double yaw = detectedTag.ftcPose.yaw;           // degrees
+
+        // Calculate distance to move (subtract desired stopping distance)
+        double distanceToMove = range - inchesBack;
+
+        // Calculate the angle to the tag in robot's reference frame
+        double angleToTag = Math.toRadians(bearing);
+
+        // Calculate the left and forward movement in the robot coordinate system.
+        // Note: pedro pose.y is left(+)/right(-). April tag ftcPose.x is left(-)/right(+).
+        // Note: pedro pose.x is forward(+). April tag ftcPose.y is forward(+).
+        // Note: detectedTag.bearing is (=) counter clockwise.
+        double targetPoseLeft = currentPose.getY() + distanceToMove * Math.sin(angleToTag);
+        double targetPoseForward = currentPose.getX() + distanceToMove * Math.cos(angleToTag);
+
+        // Calculate desired heading change
+        // If you want to face the tag, use bearing
+        // If you want to align with the tag's orientation, use yaw
+        double headingChange = angleToTag; // To face the tag
+        double newHeading = currentPose.getHeading() + headingChange;   // radians
+
+        // Normalize heading to -180 to 180
+        newHeading = normalizeAngleRadians(newHeading);
+
+        // Pose targetPose = new Pose(newX, newY, newHeading);
+        Pose targetPose = new Pose(targetPoseForward, targetPoseLeft, newHeading);
+//        telemetryM.addData("targetPoseForward: ", targetPoseForward);
+//        telemetryM.addData("targetPoseLeft: ", targetPoseLeft);
+//        telemetryM.addData("newHeading (radians): ", newHeading);
+//        telemetryM.addData("newHeading (degrees): ", Math.toDegrees(newHeading));
+
+        return targetPose;
+    }
+
+    /**
+     * Normalizes angle to [-180, 180] degree range
+     */
+    private double normalizeAngle(double degrees) {
+        double angle = degrees % 360;
+        if (angle > 180) {
+            angle -= 360;
+        } else if (angle < -180) {
+            angle += 360;
+        }
+        return angle;
+    }
+
+    /**
+     * Normalizes angle to [-π, π] radian range
+     */
+    private static double normalizeAngleRadians(double angle) {
+        double twoPI = 2.0 * Math.PI;
+        double radianAngle = angle % twoPI;
+        if (radianAngle > Math.PI) {
+            radianAngle -= twoPI;
+        } else if (radianAngle < -Math.PI) {
+            radianAngle += twoPI;
+        }
+        return radianAngle;
     }
 
 }

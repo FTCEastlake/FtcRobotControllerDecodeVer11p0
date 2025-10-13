@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Egg.pedroPathing;
+package org.firstinspires.ftc.teamcode.Frankenstein.pedroPathing;
 
 import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 // For tuning: https://pedropathing.com/docs/pathing/tuning/localization
 
-public class EggConstants {
+public class FrankConstants {
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(11.5)     // mass is in kilograms (1kg = 2.20462 lbs)
             .forwardZeroPowerAcceleration(-35.615389529881405)

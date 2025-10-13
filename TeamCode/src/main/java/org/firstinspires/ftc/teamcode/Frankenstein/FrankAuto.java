@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Burrrito;
+package org.firstinspires.ftc.teamcode.Frankenstein;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -13,16 +13,16 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoConstants;
+import org.firstinspires.ftc.teamcode.Frankenstein.pedroPathing.FrankConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Disabled
 @Configurable
-@TeleOp(name = "BurrritoAuto")
-//@Autonomous(name = "BurrritoAuto")
-public class BurrritoAuto extends LinearOpMode {
+@TeleOp(name = "FrankAuto")
+//@Autonomous(name = "FrankAuto")
+public class FrankAuto extends LinearOpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -157,7 +157,7 @@ public class BurrritoAuto extends LinearOpMode {
         opmodeTimer.resetTimer();
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
-        follower = BurrritoConstants.createFollower(hardwareMap);
+        follower = FrankConstants.createFollower(hardwareMap);
 //        buildPaths();
 //        follower.setStartingPose(startPose);
     }

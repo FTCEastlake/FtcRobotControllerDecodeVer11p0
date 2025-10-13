@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.Egg.pedroPathing;
+package org.firstinspires.ftc.teamcode.Frankenstein.pedroPathing;
 
-import static org.firstinspires.ftc.teamcode.Egg.pedroPathing.EggTuning.changes;
-import static org.firstinspires.ftc.teamcode.Egg.pedroPathing.EggTuning.drawCurrent;
-import static org.firstinspires.ftc.teamcode.Egg.pedroPathing.EggTuning.drawCurrentAndHistory;
-import static org.firstinspires.ftc.teamcode.Egg.pedroPathing.EggTuning.follower;
-import static org.firstinspires.ftc.teamcode.Egg.pedroPathing.EggTuning.stopRobot;
-import static org.firstinspires.ftc.teamcode.Egg.pedroPathing.EggTuning.telemetryM;
+import static org.firstinspires.ftc.teamcode.Frankenstein.pedroPathing.FrankTuning.changes;
+import static org.firstinspires.ftc.teamcode.Frankenstein.pedroPathing.FrankTuning.drawCurrent;
+import static org.firstinspires.ftc.teamcode.Frankenstein.pedroPathing.FrankTuning.drawCurrentAndHistory;
+import static org.firstinspires.ftc.teamcode.Frankenstein.pedroPathing.FrankTuning.follower;
+import static org.firstinspires.ftc.teamcode.Frankenstein.pedroPathing.FrankTuning.stopRobot;
+import static org.firstinspires.ftc.teamcode.Frankenstein.pedroPathing.FrankTuning.telemetryM;
 
 import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;
@@ -40,8 +40,8 @@ import java.util.List;
  */
 @Disabled
 @Configurable
-@TeleOp(name = "EggTuning", group = "Pedro Pathing")
-public class EggTuning extends SelectableOpMode {
+@TeleOp(name = "FrankTuning", group = "Pedro Pathing")
+public class FrankTuning extends SelectableOpMode {
     public static Follower follower;
 
     @IgnoreConfigurable
@@ -53,7 +53,7 @@ public class EggTuning extends SelectableOpMode {
     @IgnoreConfigurable
     static ArrayList<String> changes = new ArrayList<>();
 
-    public EggTuning() {
+    public FrankTuning() {
         super("Select a Tuning OpMode", s -> {
             s.folder("Localization", l -> {
                 l.add("Localization Test", LocalizationTest::new);
@@ -84,10 +84,10 @@ public class EggTuning extends SelectableOpMode {
     @Override
     public void onSelect() {
         if (follower == null) {
-            follower = EggConstants.createFollower(hardwareMap);
+            follower = FrankConstants.createFollower(hardwareMap);
             PanelsConfigurables.INSTANCE.refreshClass(this);
         } else {
-            follower = EggConstants.createFollower(hardwareMap);
+            follower = FrankConstants.createFollower(hardwareMap);
         }
 
         follower.setStartingPose(new Pose());
