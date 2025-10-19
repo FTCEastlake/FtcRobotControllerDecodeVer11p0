@@ -21,6 +21,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 
 import java.util.function.Supplier;
 
+@Disabled
 @Configurable
 @TeleOp(name = "BurrritoTeleopDemo")
 public class BurrritoTeleopDemo extends LinearOpMode {
