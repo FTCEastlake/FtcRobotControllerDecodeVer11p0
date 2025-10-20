@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.Burrrito.pedroPathing;
+package org.firstinspires.ftc.teamcode.DemoBot.pedroPathing;
 
-import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.changes;
-import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.drawCurrent;
-import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.drawCurrentAndHistory;
-import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.follower;
-import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.stopRobot;
-import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.telemetryM;
+import static org.firstinspires.ftc.teamcode.DemoBot.pedroPathing.DemoTuning.changes;
+import static org.firstinspires.ftc.teamcode.DemoBot.pedroPathing.DemoTuning.drawCurrent;
+import static org.firstinspires.ftc.teamcode.DemoBot.pedroPathing.DemoTuning.drawCurrentAndHistory;
+import static org.firstinspires.ftc.teamcode.DemoBot.pedroPathing.DemoTuning.follower;
+import static org.firstinspires.ftc.teamcode.DemoBot.pedroPathing.DemoTuning.stopRobot;
+import static org.firstinspires.ftc.teamcode.DemoBot.pedroPathing.DemoTuning.telemetryM;
 
 import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;
@@ -16,15 +16,11 @@ import com.bylazar.field.Style;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierCurve;
-import com.pedropathing.geometry.BezierLine;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.Vector;
-import com.pedropathing.paths.HeadingInterpolator;
-import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathChain;
-import com.pedropathing.telemetry.SelectableOpMode;
-import com.pedropathing.util.PoseHistory;
+import com.pedropathing.geometry.*;
+        import com.pedropathing.math.*;
+        import com.pedropathing.paths.*;
+        import com.pedropathing.telemetry.SelectableOpMode;
+import com.pedropathing.util.*;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -40,8 +36,8 @@ import java.util.List;
  */
 @Disabled
 @Configurable
-@TeleOp(name = "BurrritoTuning", group = "Pedro Pathing")
-public class BurrritoTuning extends SelectableOpMode {
+@TeleOp(name = "DemoTuning", group = "Pedro Pathing")
+public class DemoTuning extends SelectableOpMode {
     public static Follower follower;
 
     @IgnoreConfigurable
@@ -53,30 +49,30 @@ public class BurrritoTuning extends SelectableOpMode {
     @IgnoreConfigurable
     static ArrayList<String> changes = new ArrayList<>();
 
-    public BurrritoTuning() {
+    public DemoTuning() {
         super("Select a Tuning OpMode", s -> {
             s.folder("Localization", l -> {
-                l.add("Localization Test", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.LocalizationTest::new);
-                l.add("Forward Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.ForwardTuner::new);
-                l.add("Lateral Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.LateralTuner::new);
-                l.add("Turn Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.TurnTuner::new);
+                l.add("Localization Test", LocalizationTest::new);
+                l.add("Forward Tuner", ForwardTuner::new);
+                l.add("Lateral Tuner", LateralTuner::new);
+                l.add("Turn Tuner", TurnTuner::new);
             });
             s.folder("Automatic", a -> {
-                a.add("Forward Velocity Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.ForwardVelocityTuner::new);
-                a.add("Lateral Velocity Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.LateralVelocityTuner::new);
-                a.add("Forward Zero Power Acceleration Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.ForwardZeroPowerAccelerationTuner::new);
-                a.add("Lateral Zero Power Acceleration Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.LateralZeroPowerAccelerationTuner::new);
+                a.add("Forward Velocity Tuner", ForwardVelocityTuner::new);
+                a.add("Lateral Velocity Tuner", LateralVelocityTuner::new);
+                a.add("Forward Zero Power Acceleration Tuner", ForwardZeroPowerAccelerationTuner::new);
+                a.add("Lateral Zero Power Acceleration Tuner", LateralZeroPowerAccelerationTuner::new);
             });
             s.folder("Manual", p -> {
-                p.add("Translational Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.TranslationalTuner::new);
-                p.add("Heading Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.HeadingTuner::new);
-                p.add("Drive Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.DriveTuner::new);
-                p.add("Centripetal Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.CentripetalTuner::new);
+                p.add("Translational Tuner", TranslationalTuner::new);
+                p.add("Heading Tuner", HeadingTuner::new);
+                p.add("Drive Tuner", DriveTuner::new);
+                p.add("Centripetal Tuner", CentripetalTuner::new);
             });
             s.folder("Tests", p -> {
-                p.add("Line", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.Line::new);
-                p.add("Triangle", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.Triangle::new);
-                p.add("Circle", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.Circle::new);
+                p.add("Line", Line::new);
+                p.add("Triangle", Triangle::new);
+                p.add("Circle", Circle::new);
             });
         });
     }
@@ -84,10 +80,10 @@ public class BurrritoTuning extends SelectableOpMode {
     @Override
     public void onSelect() {
         if (follower == null) {
-            follower = BurrritoConstants.createFollower(hardwareMap);
+            follower = DemoConstants.createFollower(hardwareMap);
             PanelsConfigurables.INSTANCE.refreshClass(this);
         } else {
-            follower = BurrritoConstants.createFollower(hardwareMap);
+            follower = DemoConstants.createFollower(hardwareMap);
         }
 
         follower.setStartingPose(new Pose());
@@ -102,15 +98,15 @@ public class BurrritoTuning extends SelectableOpMode {
 
     public static void drawCurrent() {
         try {
-            org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.Drawing.drawRobot(follower.getPose());
-            org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.Drawing.sendPacket();
+            Drawing.drawRobot(follower.getPose());
+            Drawing.sendPacket();
         } catch (Exception e) {
             throw new RuntimeException("Drawing failed " + e);
         }
     }
 
     public static void drawCurrentAndHistory() {
-        org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.Drawing.drawPoseHistory(poseHistory);
+        Drawing.drawPoseHistory(poseHistory);
         drawCurrent();
     }
 

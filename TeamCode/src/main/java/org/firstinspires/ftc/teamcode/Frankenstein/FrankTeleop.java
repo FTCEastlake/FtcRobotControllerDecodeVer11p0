@@ -21,7 +21,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 
 import java.util.function.Supplier;
 
-//@Disabled
+@Disabled
 @Configurable
 @TeleOp(name = "FrankTeleop")
 public class FrankTeleop extends LinearOpMode {

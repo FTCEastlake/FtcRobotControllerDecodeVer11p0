@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Burrrito;
+package org.firstinspires.ftc.teamcode.DemoBot;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -13,14 +13,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoConstants;
+import org.firstinspires.ftc.teamcode.DemoBot.pedroPathing.DemoConstants;
 
 import java.util.function.Supplier;
 
 @Disabled
 @Configurable
-@TeleOp(name = "BurrritoTeleopOrig")
-public class BurrritoTeleopOrig extends OpMode {
+@TeleOp(name = "DemoTeleopOrig")
+public class DemoTeleopOrig extends OpMode {
     private Follower follower;
     public static Pose startingPose; //See ExampleAuto to understand how to use this
     private boolean automatedDrive;
@@ -31,7 +31,7 @@ public class BurrritoTeleopOrig extends OpMode {
 
     @Override
     public void init() {
-        follower = BurrritoConstants.createFollower(hardwareMap);
+        follower = DemoConstants.createFollower(hardwareMap);
         follower.setStartingPose(startingPose == null ? new Pose() : startingPose);
         follower.update();
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();

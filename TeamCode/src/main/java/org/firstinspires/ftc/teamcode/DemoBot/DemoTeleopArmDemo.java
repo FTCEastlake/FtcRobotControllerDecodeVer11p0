@@ -1,29 +1,14 @@
-package org.firstinspires.ftc.teamcode.Burrrito;
+package org.firstinspires.ftc.teamcode.DemoBot;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
-import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierLine;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.Vector;
-import com.pedropathing.paths.HeadingInterpolator;
-import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Common.Vision;
-import org.firstinspires.ftc.teamcode.Frankenstein.pedroPathing.FrankConstants;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
-
-import java.util.function.Supplier;
-
+@Disabled
 @Configurable
-@TeleOp(name = "BurrritoTeleopArmDemo")
-public class BurrritoTeleopArmDemo extends LinearOpMode {
+@TeleOp(name = "DemoTeleopArmDemo")
+public class DemoTeleopArmDemo extends LinearOpMode {
 
 
     ERCArmSurfNTurf _arm;
@@ -57,7 +42,7 @@ public class BurrritoTeleopArmDemo extends LinearOpMode {
         //    port 1: gobilda 5202/3/4 slideMotor
         // Servo
         //    port 0: Servo clawServo
-        
+
         _arm = new ERCArmSurfNTurf(this);
         _arm.resetArmMotorEncoders();
     }

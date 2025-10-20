@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Egg.pedroPathing;
+package org.firstinspires.ftc.teamcode.DemoBot.pedroPathing;
 
 import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 // For tuning: https://pedropathing.com/docs/pathing/tuning/localization
 
-public class EggConstants {
+public class DemoConstants {
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(11.5)     // mass is in kilograms (1kg = 2.20462 lbs)
             .forwardZeroPowerAcceleration(-35.615389529881405)
@@ -116,10 +116,10 @@ public class EggConstants {
 
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
-            .rightFrontMotorName("rightFront")
-            .rightRearMotorName("rightRear")
-            .leftRearMotorName("leftRear")
-            .leftFrontMotorName("leftFront")
+            .rightFrontMotorName("frontRight")
+            .rightRearMotorName("backRight")
+            .leftRearMotorName("backLeft")
+            .leftFrontMotorName("frontLeft")
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
