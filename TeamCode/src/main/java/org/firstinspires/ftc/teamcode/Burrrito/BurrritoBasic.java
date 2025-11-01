@@ -3,18 +3,11 @@ package org.firstinspires.ftc.teamcode.Burrrito;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
-import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoConstants;
-
-import java.util.function.Supplier;
 
 //@Disabled
 @Configurable
@@ -39,6 +32,7 @@ public class BurrritoBasic extends LinearOpMode {
     private DcMotor _rightRear = null;
 
     private HardwareMap _hardwareMap;
+    private TelemetryManager _telemetryM;
 
     private double _lsy;
     private double _rsy;
@@ -52,13 +46,27 @@ public class BurrritoBasic extends LinearOpMode {
 
         int wheelEncoderVal = 10;
 
+        String powerInfo = "Use left stick y for power";
+        String buttonInfo1 = "Buttons: X = Left Front, Y = Right Front";
+        String buttonInfo2 = "Buttons: A = Left Rear,  Y = Right Rear";
+
+        telemetry.addLine(powerInfo);
+        telemetry.addLine(buttonInfo1);
+        telemetry.addLine(buttonInfo2);
+        telemetry.update();
+
+        _telemetryM.addLine(powerInfo);
+        _telemetryM.addLine(buttonInfo1);
+        _telemetryM.addLine(buttonInfo2);
+        _telemetryM.update();
+
         while (!isStopRequested()) {
 
             // Note: all wheels should rotate forward when left_stick_y is pushed up.
             // If any wheels rotate backwards then you have to revers the motor direction in
             // initRobot() and it's corresponding MecanumConstants.zzz parameters.
 
-            double power = gamepad1.left_stick_y * 0.1;
+            double power = gamepad1.left_stick_y * 0.25;
             if (gamepad1.x) {
                 _leftFront.setTargetPosition(_leftFront.getCurrentPosition() + wheelEncoderVal);
                 _leftFront.setPower(power);
@@ -82,6 +90,7 @@ public class BurrritoBasic extends LinearOpMode {
     private void initRobot() throws InterruptedException {
 
         _hardwareMap = hardwareMap;
+        _telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
         // Make sure your ID's match your configuration
         _leftFront = _hardwareMap.get(DcMotor.class, "leftFront");

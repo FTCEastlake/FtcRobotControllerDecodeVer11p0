@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.Burrrito.pedroPathing;
 
 import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.changes;
-import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.drawCurrent;
-import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.drawCurrentAndHistory;
+import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.drawOnlyCurrent;
+import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.draw;
 import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.follower;
 import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.stopRobot;
 import static org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoTuning.telemetryM;
@@ -16,16 +16,11 @@ import com.bylazar.field.Style;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierCurve;
-import com.pedropathing.geometry.BezierLine;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.Vector;
-import com.pedropathing.paths.HeadingInterpolator;
-import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathChain;
+import com.pedropathing.geometry.*;
+import com.pedropathing.math.*;
+import com.pedropathing.paths.*;
 import com.pedropathing.telemetry.SelectableOpMode;
-import com.pedropathing.util.PoseHistory;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.pedropathing.util.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -38,7 +33,6 @@ import java.util.List;
  * @author Baron Henderson - 20077 The Indubitables
  * @version 1.0, 6/26/2025
  */
-@Disabled
 @Configurable
 @TeleOp(name = "BurrritoTuning", group = "Pedro Pathing")
 public class BurrritoTuning extends SelectableOpMode {
@@ -56,27 +50,27 @@ public class BurrritoTuning extends SelectableOpMode {
     public BurrritoTuning() {
         super("Select a Tuning OpMode", s -> {
             s.folder("Localization", l -> {
-                l.add("Localization Test", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.LocalizationTest::new);
-                l.add("Forward Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.ForwardTuner::new);
-                l.add("Lateral Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.LateralTuner::new);
-                l.add("Turn Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.TurnTuner::new);
+                l.add("Localization Test", LocalizationTest::new);
+                l.add("Forward Tuner", ForwardTuner::new);
+                l.add("Lateral Tuner", LateralTuner::new);
+                l.add("Turn Tuner", TurnTuner::new);
             });
             s.folder("Automatic", a -> {
-                a.add("Forward Velocity Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.ForwardVelocityTuner::new);
-                a.add("Lateral Velocity Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.LateralVelocityTuner::new);
-                a.add("Forward Zero Power Acceleration Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.ForwardZeroPowerAccelerationTuner::new);
-                a.add("Lateral Zero Power Acceleration Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.LateralZeroPowerAccelerationTuner::new);
+                a.add("Forward Velocity Tuner", ForwardVelocityTuner::new);
+                a.add("Lateral Velocity Tuner", LateralVelocityTuner::new);
+                a.add("Forward Zero Power Acceleration Tuner", ForwardZeroPowerAccelerationTuner::new);
+                a.add("Lateral Zero Power Acceleration Tuner", LateralZeroPowerAccelerationTuner::new);
             });
             s.folder("Manual", p -> {
-                p.add("Translational Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.TranslationalTuner::new);
-                p.add("Heading Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.HeadingTuner::new);
-                p.add("Drive Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.DriveTuner::new);
-                p.add("Centripetal Tuner", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.CentripetalTuner::new);
+                p.add("Translational Tuner", TranslationalTuner::new);
+                p.add("Heading Tuner", HeadingTuner::new);
+                p.add("Drive Tuner", DriveTuner::new);
+                p.add("Centripetal Tuner", CentripetalTuner::new);
             });
             s.folder("Tests", p -> {
-                p.add("Line", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.Line::new);
-                p.add("Triangle", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.Triangle::new);
-                p.add("Circle", org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.Circle::new);
+                p.add("Line", Line::new);
+                p.add("Triangle", Triangle::new);
+                p.add("Circle", Circle::new);
             });
         });
     }
@@ -95,23 +89,24 @@ public class BurrritoTuning extends SelectableOpMode {
         poseHistory = follower.getPoseHistory();
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+
+        Drawing.init();
     }
 
     @Override
     public void onLog(List<String> lines) {}
 
-    public static void drawCurrent() {
+    public static void drawOnlyCurrent() {
         try {
-            org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.Drawing.drawRobot(follower.getPose());
-            org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.Drawing.sendPacket();
+            Drawing.drawRobot(follower.getPose());
+            Drawing.sendPacket();
         } catch (Exception e) {
             throw new RuntimeException("Drawing failed " + e);
         }
     }
 
-    public static void drawCurrentAndHistory() {
-        org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.Drawing.drawPoseHistory(poseHistory);
-        drawCurrent();
+    public static void draw() {
+        Drawing.drawDebug(follower);
     }
 
     /** This creates a full stop of the robot by setting the drive motors to run at 0 power. */
@@ -141,7 +136,7 @@ class LocalizationTest extends OpMode {
                 + "allowing robot control through a basic mecanum drive on gamepad 1.");
         telemetryM.update(telemetry);
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     @Override
@@ -165,7 +160,7 @@ class LocalizationTest extends OpMode {
         telemetryM.debug("total heading:" + follower.getTotalHeading());
         telemetryM.update(telemetry);
 
-        drawCurrentAndHistory();
+        draw();
     }
 }
 
@@ -188,7 +183,7 @@ class ForwardTuner extends OpMode {
     @Override
     public void init() {
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     /** This initializes the PoseUpdater as well as the Panels telemetry. */
@@ -196,7 +191,7 @@ class ForwardTuner extends OpMode {
     public void init_loop() {
         telemetryM.debug("Pull your robot forward " + DISTANCE + " inches. Your forward ticks to inches will be shown on the telemetry.");
         telemetryM.update(telemetry);
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     /**
@@ -212,7 +207,7 @@ class ForwardTuner extends OpMode {
         telemetryM.debug("Multiplier: " + (DISTANCE / (follower.getPose().getX() / follower.getPoseTracker().getLocalizer().getForwardMultiplier())));
         telemetryM.update(telemetry);
 
-        drawCurrentAndHistory();
+        draw();
     }
 }
 
@@ -235,7 +230,7 @@ class LateralTuner extends OpMode {
     @Override
     public void init() {
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     /** This initializes the PoseUpdater as well as the Panels telemetry. */
@@ -243,7 +238,7 @@ class LateralTuner extends OpMode {
     public void init_loop() {
         telemetryM.debug("Pull your robot to the right " + DISTANCE + " inches. Your strafe ticks to inches will be shown on the telemetry.");
         telemetryM.update(telemetry);
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     /**
@@ -259,7 +254,7 @@ class LateralTuner extends OpMode {
         telemetryM.debug("Multiplier: " + (DISTANCE / (follower.getPose().getY() / follower.getPoseTracker().getLocalizer().getLateralMultiplier())));
         telemetryM.update(telemetry);
 
-        drawCurrentAndHistory();
+        draw();
     }
 }
 
@@ -282,7 +277,7 @@ class TurnTuner extends OpMode {
     @Override
     public void init() {
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     /** This initializes the PoseUpdater as well as the Panels telemetry. */
@@ -291,7 +286,7 @@ class TurnTuner extends OpMode {
         telemetryM.debug("Turn your robot " + ANGLE + " radians. Your turn ticks to inches will be shown on the telemetry.");
         telemetryM.update(telemetry);
 
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     /**
@@ -307,7 +302,7 @@ class TurnTuner extends OpMode {
         telemetryM.debug("Multiplier: " + (ANGLE / (follower.getTotalHeading() / follower.getPoseTracker().getLocalizer().getTurningMultiplier())));
         telemetryM.update(telemetry);
 
-        drawCurrentAndHistory();
+        draw();
     }
 }
 
@@ -328,7 +323,7 @@ class TurnTuner extends OpMode {
  */
 class ForwardVelocityTuner extends OpMode {
     private final ArrayList<Double> velocities = new ArrayList<>();
-    public static double DISTANCE = 44; // 48 inches is the default. Larger values yield better results.
+    public static double DISTANCE = 48;
     public static double RECORD_NUMBER = 10;
 
     private boolean end;
@@ -347,7 +342,7 @@ class ForwardVelocityTuner extends OpMode {
         telemetryM.update(telemetry);
 
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     /** This starts the OpMode by setting the drive motors to run forward at full power. */
@@ -375,7 +370,7 @@ class ForwardVelocityTuner extends OpMode {
         }
 
         follower.update();
-        drawCurrentAndHistory();
+        draw();
 
 
         if (!end) {
@@ -434,7 +429,7 @@ class ForwardVelocityTuner extends OpMode {
 class LateralVelocityTuner extends OpMode {
     private final ArrayList<Double> velocities = new ArrayList<>();
 
-    public static double DISTANCE = 44; // 48 inches is the default. Larger values yield better results.
+    public static double DISTANCE = 48;
     public static double RECORD_NUMBER = 10;
 
     private boolean end;
@@ -455,7 +450,7 @@ class LateralVelocityTuner extends OpMode {
         telemetryM.update(telemetry);
 
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     /** This starts the OpMode by setting the drive motors to run right at full power. */
@@ -482,7 +477,7 @@ class LateralVelocityTuner extends OpMode {
         }
 
         follower.update();
-        drawCurrentAndHistory();
+        draw();
 
         if (!end) {
             if (Math.abs(follower.getPose().getY()) > DISTANCE) {
@@ -554,7 +549,7 @@ class ForwardZeroPowerAccelerationTuner extends OpMode {
         telemetryM.debug("Press B on Gamepad 1 to stop.");
         telemetryM.update(telemetry);
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     /** This starts the OpMode by setting the drive motors to run forward at full power. */
@@ -579,7 +574,7 @@ class ForwardZeroPowerAccelerationTuner extends OpMode {
         }
 
         follower.update();
-        drawCurrentAndHistory();
+        draw();
 
         Vector heading = new Vector(1.0, follower.getPose().getHeading());
         if (!end) {
@@ -656,7 +651,7 @@ class LateralZeroPowerAccelerationTuner extends OpMode {
         telemetryM.debug("Press B on game pad 1 to stop.");
         telemetryM.update(telemetry);
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     /** This starts the OpMode by setting the drive motors to run forward at full power. */
@@ -681,7 +676,7 @@ class LateralZeroPowerAccelerationTuner extends OpMode {
         }
 
         follower.update();
-        drawCurrentAndHistory();
+        draw();
 
         Vector heading = new Vector(1.0, follower.getPose().getHeading() - Math.PI / 2);
         if (!end) {
@@ -750,7 +745,7 @@ class TranslationalTuner extends OpMode {
         telemetryM.debug("You can adjust the PIDF values to tune the robot's translational PIDF(s).");
         telemetryM.update(telemetry);
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     @Override
@@ -768,7 +763,7 @@ class TranslationalTuner extends OpMode {
     @Override
     public void loop() {
         follower.update();
-        drawCurrentAndHistory();
+        draw();
 
         if (!follower.isBusy()) {
             if (forward) {
@@ -817,7 +812,7 @@ class HeadingTuner extends OpMode {
         telemetryM.debug("You can adjust the PIDF values to tune the robot's heading PIDF(s).");
         telemetryM.update(telemetry);
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     @Override
@@ -838,7 +833,7 @@ class HeadingTuner extends OpMode {
     @Override
     public void loop() {
         follower.update();
-        drawCurrentAndHistory();
+        draw();
 
         if (!follower.isBusy()) {
             if (forward) {
@@ -885,7 +880,7 @@ class DriveTuner extends OpMode {
         telemetryM.debug("Make sure you have enough room.");
         telemetryM.update(telemetry);
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     @Override
@@ -915,7 +910,7 @@ class DriveTuner extends OpMode {
     @Override
     public void loop() {
         follower.update();
-        drawCurrentAndHistory();
+        draw();
 
         if (!follower.isBusy()) {
             if (forward) {
@@ -960,7 +955,7 @@ class Line extends OpMode {
         telemetryM.debug("You can adjust the PIDF values to tune the robot's drive PIDF(s).");
         telemetryM.update(telemetry);
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     @Override
@@ -977,7 +972,7 @@ class Line extends OpMode {
     @Override
     public void loop() {
         follower.update();
-        drawCurrentAndHistory();
+        draw();
 
         if (!follower.isBusy()) {
             if (forward) {
@@ -1028,7 +1023,7 @@ class CentripetalTuner extends OpMode {
         telemetryM.debug("Make sure you have enough room.");
         telemetryM.update(telemetry);
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     @Override
@@ -1050,7 +1045,7 @@ class CentripetalTuner extends OpMode {
     @Override
     public void loop() {
         follower.update();
-        drawCurrentAndHistory();
+        draw();
         if (!follower.isBusy()) {
             if (forward) {
                 forward = false;
@@ -1089,7 +1084,7 @@ class Triangle extends OpMode {
     @Override
     public void loop() {
         follower.update();
-        drawCurrentAndHistory();
+        draw();
 
         if (follower.atParametricEnd()) {
             follower.followPath(triangle, true);
@@ -1105,7 +1100,7 @@ class Triangle extends OpMode {
         telemetryM.debug("So, make sure you have enough space to the left, front, and right to run the OpMode.");
         telemetryM.update(telemetry);
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     /** Creates the PathChain for the "triangle".*/
@@ -1162,7 +1157,7 @@ class Circle extends OpMode {
         telemetryM.debug("It will also continuously face the center of the circle to test your heading and centripetal correction.");
         telemetryM.update(telemetry);
         follower.update();
-        drawCurrent();
+        drawOnlyCurrent();
     }
 
     @Override
@@ -1175,7 +1170,7 @@ class Circle extends OpMode {
     @Override
     public void loop() {
         follower.update();
-        drawCurrentAndHistory();
+        draw();
 
         if (follower.atParametricEnd()) {
             follower.followPath(circle);

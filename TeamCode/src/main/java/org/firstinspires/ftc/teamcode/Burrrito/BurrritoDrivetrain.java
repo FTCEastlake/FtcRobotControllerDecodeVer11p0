@@ -1,63 +1,49 @@
 package org.firstinspires.ftc.teamcode.Burrrito;
 
-import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
-import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierLine;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.math.Vector;
-import com.pedropathing.paths.HeadingInterpolator;
-import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathChain;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 
-import org.firstinspires.ftc.teamcode.Common.Vision;
-import org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoConstants;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
+import org.firstinspires.ftc.teamcode.Common.MecanumDrive;
 
-import java.util.function.Supplier;
-
-
-@Configurable
 @TeleOp(name = "BurrritoDrivetrain")
 public class BurrritoDrivetrain extends LinearOpMode {
 
-    private Follower follower;
-    public static Pose startingPose; //See ExampleAuto to understand how to use this
-    private Supplier<PathChain> pathChain;
-    private TelemetryManager telemetryM;
-
-    public static double MAX_POWER = 0.5;
-
-    // Desired offset from tag (in inches)
-    private static final double DESIRED_DISTANCE = 30.0; // 30 inches from tag
+    private MecanumDrive _drive;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        // Note: MecanumConstants parameters are in the pedroPathing/constants file.
         initRobot();
 
         waitForStart();
 
-        follower.startTeleopDrive();
+        telemetry.addLine("Press A to reset Yaw");
+        telemetry.addLine("Press left bumper for max speed (1.0)");
+        telemetry.addLine("Press right bumper for half speed (0.5)");
+        telemetry.addLine("The left joystick sets the robot direction");
+        telemetry.addLine("Moving the right joystick left and right turns the robot");
+        telemetry.update();
 
         while (!isStopRequested()) {
 
-            //Call this once per loop
-            follower.update();
-            telemetryM.update();
+            // If you press the A button, then you reset the Yaw to be zero from the way
+            // the robot is currently pointing
+            if (gamepad1.a) {
+                _drive.resetYaw();
+            }
 
-            follower.setTeleOpDrive(
-                    gamepad1.left_stick_y * MAX_POWER,
-                    gamepad1.left_stick_x * MAX_POWER,
-                    gamepad1.right_stick_x * MAX_POWER,
-                    false // true = Robot Centric, false = Field Centric
-            );
+            if (gamepad1.left_bumper) {
+                _drive.setMaxSpeed(1.0);
+            }
+
+            if (gamepad1.right_bumper) {
+                _drive.setMaxSpeed(0.5);
+            }
+
+            _drive.driveFieldRelative(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
         }
 
@@ -65,13 +51,23 @@ public class BurrritoDrivetrain extends LinearOpMode {
 
 
     private void initRobot() throws InterruptedException {
-        follower = BurrritoConstants.createFollower(hardwareMap);
-        follower.setStartingPose(startingPose == null ? new Pose() : startingPose);
-        follower.update();
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
 
-        follower.activateAllPIDFs();
-        follower.setMaxPower(MAX_POWER);     // you can configure the power for each state
+        // We set the left motors in reverse which is needed for drive trains where the left
+        // motors are opposite to the right ones.
+        DcMotor.Direction leftFrontDirection = DcMotor.Direction.FORWARD;
+        DcMotor.Direction leftRearDirection = DcMotor.Direction.FORWARD;
+        DcMotor.Direction rightFrontDirection =DcMotor.Direction.REVERSE;
+        DcMotor.Direction rightRearDirection = DcMotor.Direction.REVERSE;
+
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+        double maxSpeed = 0.5;  // range is 0.0 to 1.0
+
+        _drive = new MecanumDrive(leftFrontDirection, leftRearDirection,
+                rightFrontDirection, rightRearDirection,
+                logoDirection, usbDirection,
+                maxSpeed,this);
+
     }
 
 
