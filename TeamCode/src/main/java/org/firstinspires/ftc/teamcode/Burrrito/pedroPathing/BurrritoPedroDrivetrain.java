@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Burrrito;
+package org.firstinspires.ftc.teamcode.Burrrito.pedroPathing;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -9,8 +9,6 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoConstants;
 
 import java.util.function.Supplier;
 

@@ -7,10 +7,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.teamcode.Common.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Common.Vision;
 
 @TeleOp(name = "BurrritoDrivetrain")
 public class BurrritoDrivetrain extends LinearOpMode {
 
+    private Vision _vision;
     private MecanumDrive _drive;
 
     @Override
@@ -51,6 +53,8 @@ public class BurrritoDrivetrain extends LinearOpMode {
 
 
     private void initRobot() throws InterruptedException {
+
+        //_vision = new Vision(this);
 
         // We set the left motors in reverse which is needed for drive trains where the left
         // motors are opposite to the right ones.

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Burrrito;
+package org.firstinspires.ftc.teamcode.Burrrito.pedroPathing;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -13,8 +13,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Burrrito.pedroPathing.BurrritoConstants;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +22,7 @@ import java.util.List;
 //@Autonomous(name = "BurrritoAuto")
 public class BurrritoAuto extends LinearOpMode {
 
+    // panels: http://192.168.43.1:8001/
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;

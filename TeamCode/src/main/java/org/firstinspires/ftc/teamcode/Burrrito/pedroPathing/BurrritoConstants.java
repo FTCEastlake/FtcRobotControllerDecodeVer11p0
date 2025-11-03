@@ -18,6 +18,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class BurrritoConstants {
     public static FollowerConstants followerConstants = new FollowerConstants()
+            // We are not using dual PID system until we're more experienced in single PID system.
+            //.useSecondaryTranslationalPIDF(true)
+            //.useSecondaryHeadingPIDF(true)
+            //.useSecondaryDrivePIDF(true)
+
+            // Lateral correction (BurrritoTuning->Manual->Translational Tuner)
+            //.translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.0, 0))
+
+            .forwardZeroPowerAcceleration(-35.6123)     // run BurrritoTuning->Automatic->Forward Zero Power Acceleration Tuner
+            .lateralZeroPowerAcceleration(-35.4604)     // run BurrritoTuning->Automatic->Lateral Zero Power Acceleration Tuner
             .mass(5.0);     // mass is in kilograms (1kg = 2.20462 lbs)
 
 
@@ -31,15 +41,22 @@ public class BurrritoConstants {
             .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .xVelocity(67.8704)     // run BurrritoTuning->Automatic->Forward Velocity Tuner
+            .yVelocity(54.4133)     // run BurrritoTuning->Automatic->Lateral Velocity Tuner
             .useBrakeModeInTeleOp(true);     // enables active braking during TeleOp in Pedro Pathing, helping the robot resist unwanted drift when no movement is commanded.
 
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(-2.375)      // forward pod measured in the Y direction (left is positive)
-            .strafePodX(-1.375)       // strafe pod measured in the X direction (forward is positive)
+            // Note, we designate the reference point as front center of the robot, not the actual center of the robot.
+            // forward pod measured in the Y direction (left is positive). This is also the xOffset value in _pinpoint.setOffsets(...)
+            .forwardPodY(-2.3125)
+            // strafe pod measured in the X direction (forward is positive). This is also the yOffset value in _pinpoint.setOffsets(...)
+            .strafePodX(-9.5)           // strafe pod measured in the X direction (forward is positive)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
+            // The default directions of the forward encoder = FORWARD and strafe encoder = FORWARD.
+            // Because the pinpoint odometer computer is installed upside down, we need to set strafe encoder = REVERSED.
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);   // REVERSED because pinpoint is installed upside down
 
