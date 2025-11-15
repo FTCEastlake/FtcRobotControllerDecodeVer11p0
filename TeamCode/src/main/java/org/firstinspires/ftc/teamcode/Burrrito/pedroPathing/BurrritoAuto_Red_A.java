@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Disabled
+@Disabled
 @Configurable
 @TeleOp(name = "BurrritoAuto_Red_A")
 //@Autonomous(name = "BurrritoAuto_Red_A")
@@ -36,11 +36,17 @@ public class BurrritoAuto_Red_A extends LinearOpMode {
     // Note3: positive y is left, negative y is right
     // Note4: positive rotation is counter clockwise (range is 0 to 180), negative rotation is clockwise (range is 0 to -180)
 
+//    private Pose startPose = new Pose(0.0, 0.0, Math.toRadians(0.0));  // start Pose of our robot.
+//    private Pose scorePose = new Pose(5.0, 0.0, Math.toRadians(0.0));  // scoring posit0ion
+//    private Pose pickup1Pose = new Pose(-5.0, 0.0, Math.toRadians(45));  // first pickup
+//    private Pose pickup2Pose = new Pose(-10.0, 0.0, Math.toRadians(90));  // second pickup
+//    private Pose pickup3Pose = new Pose(-15.0, 0.0, Math.toRadians(135));  // third pickup
+
     private Pose startPose = new Pose(0.0, 0.0, Math.toRadians(0.0));  // start Pose of our robot.
-    private Pose scorePose = new Pose(5.0, 0.0, Math.toRadians(0.0));  // scoring position
-    private Pose pickup1Pose = new Pose(-5.0, 0.0, Math.toRadians(45));  // first pickup
-    private Pose pickup2Pose = new Pose(-10.0, 0.0, Math.toRadians(90));  // second pickup
-    private Pose pickup3Pose = new Pose(-15.0, 0.0, Math.toRadians(135));  // third pickup
+    private Pose scorePose = new Pose(5.0, 10.0, Math.toRadians(-45.0));  // scoring position
+    private Pose pickup1Pose = new Pose(0.0, 20.0, Math.toRadians(90));  // first pickup
+    private Pose pickup2Pose = new Pose(5.0, 20.0, Math.toRadians(90));  // second pickup
+    private Pose pickup3Pose = new Pose(10.0, 20.0, Math.toRadians(90));  // third pickup
 
     private Path scorePreload;
     private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;

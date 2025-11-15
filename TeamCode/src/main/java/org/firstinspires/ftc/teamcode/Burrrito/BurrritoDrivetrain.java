@@ -1,19 +1,22 @@
 package org.firstinspires.ftc.teamcode.Burrrito;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.teamcode.Common.ColorSensorV3;
 import org.firstinspires.ftc.teamcode.Common.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Common.Vision;
 
+@Disabled
 @TeleOp(name = "BurrritoDrivetrain")
 public class BurrritoDrivetrain extends LinearOpMode {
 
     private Vision _vision;
     private MecanumDrive _drive;
+    private ColorSensorV3 _colorSensor;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -72,6 +75,7 @@ public class BurrritoDrivetrain extends LinearOpMode {
                 logoDirection, usbDirection,
                 maxSpeed,this);
 
+        //_colorSensor = new ColorSensorV3(this, telemetry);
     }
 
 

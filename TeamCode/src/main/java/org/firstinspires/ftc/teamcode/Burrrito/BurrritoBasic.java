@@ -4,6 +4,7 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,8 +14,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.Common.ColorSensorV3;
 
-//@Disabled
+@Disabled
 @Configurable
 @TeleOp(name = "BurrritoBasic")
 public class BurrritoBasic extends LinearOpMode {
@@ -40,6 +42,9 @@ public class BurrritoBasic extends LinearOpMode {
     private TelemetryManager _telemetryM;
 
     private GoBildaPinpointDriver _pinpoint;
+
+    private ColorSensorV3 _colorSensor = null;
+    private ColorSensorV3.DetectedColor _detectedColor;
 
     private double _lsy;
     private double _rsy;
@@ -105,7 +110,7 @@ public class BurrritoBasic extends LinearOpMode {
             telemetry.addData("X coordinate (IN)", pose2D.getX(DistanceUnit.INCH));
             telemetry.addData("Y coordinate (IN)", pose2D.getY(DistanceUnit.INCH));
             telemetry.addData("Heading angle (DEGREES)", pose2D.getHeading(AngleUnit.DEGREES));
-            telemetry.update();
+
 
             _telemetryM.addLine(powerInfo);
             _telemetryM.addLine(buttonInfo1);
@@ -117,6 +122,11 @@ public class BurrritoBasic extends LinearOpMode {
             _telemetryM.addData("X coordinate (IN)", pose2D.getX(DistanceUnit.INCH));
             _telemetryM.addData("Y coordinate (IN)", pose2D.getY(DistanceUnit.INCH));
             _telemetryM.addData("Heading angle (DEGREES)", pose2D.getHeading(AngleUnit.DEGREES));
+
+            //_colorSensor.displayColorValues();
+            //_detectedColor = _colorSensor.getDetectedColor();
+
+            telemetry.update();
             _telemetryM.update();
         }
 
@@ -126,6 +136,7 @@ public class BurrritoBasic extends LinearOpMode {
 
         _hardwareMap = hardwareMap;
         _telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        //_colorSensor = new ColorSensorV3(this, telemetry);
 
         // Make sure your ID's match your configuration
         _leftFront = _hardwareMap.get(DcMotor.class, "leftFront");
