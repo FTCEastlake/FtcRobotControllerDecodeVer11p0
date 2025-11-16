@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Common;
 
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,6 +16,7 @@ public class ColorSensorV3 {
     private LinearOpMode _opMode;
     private HardwareMap _hardwareMap;
     private Telemetry _telemetry;
+    private TelemetryManager _telemetryM;
     private NormalizedColorSensor _colorSensor;
 
     public enum DetectedColor {
@@ -25,9 +27,10 @@ public class ColorSensorV3 {
         UNKNOWN
     }
 
-    public ColorSensorV3(LinearOpMode opMode, Telemetry telemetry) throws InterruptedException{
+    public ColorSensorV3(LinearOpMode opMode, TelemetryManager telemetryM, Telemetry telemetry) throws InterruptedException{
         _opMode = opMode;
         _hardwareMap = opMode.hardwareMap;
+        _telemetryM = telemetryM;
         _telemetry = telemetry;
         init();
     }
@@ -91,6 +94,28 @@ public class ColorSensorV3 {
             return DetectedColor.UNKNOWN;
     }
 
+    public boolean isGreenColor() {
+
+        NormalizedRGBA colors = _colorSensor.getNormalizedColors();
+
+        float normalRed = colors.red / colors.alpha;
+        float normalGreen = colors.green / colors.alpha;
+        float normalBlue = colors.blue / colors.alpha;
+
+        // watch youtube: https://www.youtube.com/watch?v=pyIeknIcT8M
+        // How to calibrate colors:
+        // 1) Place the red object at the detection distance.
+        // 2) Call setGain() greater than 1.0 until the red value is greater than 0.35 when calling displayColorValues().
+        // 3) Call setDetectedThresholdsRed(...) passing in the normRed, normalGreen and normalBlue values.
+        // 4) Repeat steps 1-3 for blue and green colors.
+        // NOTE: We only want to setGain() to a high enough value so that the detection of the main colors are greater than 0.35.
+
+        if (normalGreen > _greenThreshold_Green && normalRed < _greenThreshold_Red && normalBlue < _greenThreshold_Blue)
+            return true;
+        else
+            return false;
+    }
+
     public void displayColorValues() {
         // Returns red, green, blue, alpha
         NormalizedRGBA colors = _colorSensor.getNormalizedColors();
@@ -98,6 +123,11 @@ public class ColorSensorV3 {
         float normalRed = colors.red / colors.alpha;
         float normalGreen = colors.green / colors.alpha;
         float normalBlue = colors.blue / colors.alpha;
+
+        _telemetryM.addData("red", normalRed);
+        _telemetryM.addData("green", normalGreen);
+        _telemetryM.addData("blue", normalBlue);
+        //_telemetryM.update();
 
         _telemetry.addData("red", normalRed);
         _telemetry.addData("green", normalGreen);

@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Disabled
 @Configurable
-@TeleOp(name = "TestBench")
-public class TestBench extends LinearOpMode {
+@TeleOp(name = "TestBenchMotor")
+public class TestBenchMotor extends LinearOpMode {
 
     //**************************************************************
     // Control Hub:
