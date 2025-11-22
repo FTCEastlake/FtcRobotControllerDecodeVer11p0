@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Common.ColorSensorV3;
 import org.firstinspires.ftc.teamcode.Common.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Common.Vision;
 
-//@Disabled
+@Disabled
 @TeleOp(name = "BurrritoTeleop")
 public class BurrritoTeleop extends LinearOpMode {
 

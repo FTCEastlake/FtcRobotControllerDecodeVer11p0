@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Common.VisionColor;
 
-//@Disabled
+@Disabled
 @Configurable
 @TeleOp(name = "TestBenchVisionColor")
 public class TestBenchVisionColor extends LinearOpMode {
