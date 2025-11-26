@@ -20,7 +20,6 @@ public class MecanumDrive {
     private DcMotor _leftRear;
     private DcMotor _rightRear;
 
-    private double _maxPower = 1.0;     // don't change this value
     private double _maxSpeed = 1.0;     // make this slower for outreaches
 
     // This declares the IMU needed to get the current direction the robot is facing
@@ -103,22 +102,18 @@ public class MecanumDrive {
         double frontRightPower = forward - right - rotate;
         double backRightPower = forward + right - rotate;
         double backLeftPower = forward - right + rotate;
-        
-        // This is needed to make sure we don't pass > 1.0 to any wheel
-        // It allows us to keep all of the motors in proportion to what they should
-        // be and not get clipped
-        _maxPower = Math.max(_maxPower, Math.abs(frontLeftPower));
-        _maxPower = Math.max(_maxPower, Math.abs(frontRightPower));
-        _maxPower = Math.max(_maxPower, Math.abs(backRightPower));
-        _maxPower = Math.max(_maxPower, Math.abs(backLeftPower));
 
-        // We multiply by maxSpeed so that it can be set lower for outreaches
-        // When a young child is driving the robot, we may not want to allow full
-        // speed.
-        _leftFront.setPower(_maxSpeed * (frontLeftPower / _maxPower));
-        _rightFront.setPower(_maxSpeed * (frontRightPower / _maxPower));
-        _leftRear.setPower(_maxSpeed * (backLeftPower / _maxPower));
-        _rightRear.setPower(_maxSpeed * (backRightPower / _maxPower));
+        // Note: Math.max() only accepts 2 arguments.
+        double maxPower = Math.max(
+                Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower)),
+                Math.max(Math.abs(backLeftPower), Math.abs(backRightPower))
+        );
+
+        _leftFront.setPower(_maxSpeed * (frontLeftPower / maxPower));
+        _rightFront.setPower(_maxSpeed * (frontRightPower / maxPower));
+        _leftRear.setPower(_maxSpeed * (backLeftPower / maxPower));
+        _rightRear.setPower(_maxSpeed * (backRightPower / maxPower));
+
     }
 
 }
