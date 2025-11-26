@@ -109,6 +109,10 @@ public class MecanumDrive {
                 Math.max(Math.abs(backLeftPower), Math.abs(backRightPower))
         );
 
+        if (maxPower < 1.0) {
+            maxPower = 1.0;  // don’t scale up small values
+        }
+
         _leftFront.setPower(_maxSpeed * (frontLeftPower / maxPower));
         _rightFront.setPower(_maxSpeed * (frontRightPower / maxPower));
         _leftRear.setPower(_maxSpeed * (backLeftPower / maxPower));
