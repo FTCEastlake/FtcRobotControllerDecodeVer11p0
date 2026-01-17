@@ -15,104 +15,22 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 // For tuning: https://pedropathing.com/docs/pathing/tuning/localization
+// Watch Youtube tuning video: https://www.youtube.com/watch?v=vihb2LPtSK0&t=195s
 
 public class EggConstants {
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .mass(11.5)     // mass is in kilograms (1kg = 2.20462 lbs)
-            .forwardZeroPowerAcceleration(-35.615389529881405)
-            .lateralZeroPowerAcceleration(-49.091498732147805)
 
+            // Lateral correction (BurrritoTuning->Manual->Translational Tuner)
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.04, 0, 0.01, 0.03))   // coefficientsTranslationalPIDF
+            // Lateral correction (BurrritoTuning->Manual->Heading Tuner)
+            .headingPIDFCoefficients(new PIDFCoefficients(0.7, 0, 0.01, 0.03))         // coefficientsHeadingPIDF
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.025, 0, 0.00001, 0.6, 0.01 )) // coefficientsDrivePIDF
+            .centripetalScaling(0.0005)     // default = 0.0005
 
-            .useSecondaryHeadingPIDF(false)     // this is set to true by the call to secondaryHeadingPIDFCoefficients()
-            .useSecondaryDrivePIDF(false)       // this is set to true by the call to secondaryDrivePIDFCoefficients()
+            .forwardZeroPowerAcceleration(-33.41435813920928)   // run BurrritoTuning->Automatic->Forward Zero Power Acceleration Tuner
+            .lateralZeroPowerAcceleration(-41.18010230717188)   // run BurrritoTuning->Automatic->Lateral Zero Power Acceleration Tuner
+            .mass(11.5);     // mass is in kilograms (1kg = 2.20462 lbs)
 
-            //**************************************************
-            // Translational PID Coefficients
-            // The translational PIDF ensures the robot follows a straight path without lateral deviation.
-            //**************************************************
-            // Main (coarse) correction of left/right errors.
-            // Default Value: new PIDFCoefficients(0.1,0,0,0);
-            .translationalPIDFCoefficients(new PIDFCoefficients(
-                    0.01,
-                    0.0,
-                    0.0,
-                    0.0
-            ))
-
-            // The limit at which the translational PIDF switches between the main and
-            // secondary translational PIDFs, if the secondary PID is active. Default Value: 3 (inches)
-            .translationalPIDFSwitch(3)
-
-            // Secondary translational PIDF coefficients (don't use integral).
-            // Default Value: new PIDFCoefficients(0.3, 0, 0.01, 0.015)
-            // Note: setting this automatically set useSecondaryTranslationalPIDF = true
-            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(
-                    0.3,
-                    0.0,
-                    0.01,
-                    0.015
-            ))
-
-
-            //**************************************************
-            // Heading PID Coefficients
-            // The heading PIDF corrects for the robot's heading while following the path.
-            //**************************************************
-            // Main (coarse) heading error PIDF coefficients
-            // Default Value: new PIDFCoefficients(1, 0, 0, 0.01);
-            .headingPIDFCoefficients(new PIDFCoefficients(
-                    1.0,
-                    0.0,
-                    0.0,
-                    0.1
-            ))
-
-            // The limit at which the heading PIDF switches between the main and secondary heading PIDFs.
-            // Default Value: Math.PI / 20 (9 degrees)
-            .headingPIDFSwitch(Math.PI / 20)
-
-            // Secondary heading error PIDF coefficients.
-            // Default Value: new PIDFCoefficients(5, 0, 0.08, 0.01)
-            // Note: setting this automatically set useSecondaryHeadingPIDF = true
-            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(
-                    5.0,
-                    0.0,
-                    0.08,
-                    0.01
-            ))
-
-
-            //**************************************************
-            // Drive PID Coefficients
-            // The Drive PIDF manages acceleration and braking along a path, ensuring smooth motion and minimizing overshoot.
-            //**************************************************
-            // Main (coarse) drive PIDF coefficients
-            // Default Value: new FilteredPIDFCoefficients(0.025, 0, 0.00001, 0.6, 0.01);
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(
-                    0.025,
-                    0,
-                    0.00001,
-                    0.6,
-                    0.01
-            ))
-
-            // The limit at which the heading PIDF switches between the main and secondary drive PIDFs.
-            // Default Value: 20 (inches)
-            .drivePIDFSwitch(20)
-
-            // Secondary drive PIDF coefficients.
-            // Default Value: new FilteredPIDFCoefficients(0.02, 0, 0.000005, 0.6, 0.01)
-            // Note: setting this automatically set useSecondaryDrivePIDF = true
-            .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(
-                    0.02,
-                    0,
-                    0.000005,
-                    0.6,
-                    0.01
-            ))
-
-            // Centripetal force to power scaling Default Value: 0.0005
-            .centripetalScaling(0.0005);
 
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
@@ -120,33 +38,37 @@ public class EggConstants {
             .rightRearMotorName("rightRear")
             .leftRearMotorName("leftRear")
             .leftFrontMotorName("leftFront")
-            .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .useBrakeModeInTeleOp(true)     // enables active braking during TeleOp in Pedro Pathing, helping the robot resist unwanted drift when no movement is commanded.
-            .xVelocity(62.3378310316191)
-            .yVelocity(52.962789700725885);
+            .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .xVelocity(65.94748717781127)   // run BurrritoTuning->Automatic->Forward Velocity Tuner
+            .yVelocity(54.202004259965555)  // run BurrritoTuning->Automatic->Lateral Velocity Tuner
+            .useBrakeModeInTeleOp(true);    // enables active braking during TeleOp in Pedro Pathing, helping the robot resist unwanted drift when no movement is commanded.
+
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(2.75)      // forward pod measured in the Y direction (left is positive)
-            .strafePodX(-2.0)       // strafe pod measured in the X direction (forward is positive)
+            // Note, we designate the reference point as front center of the robot, not the actual center of the robot.
+            // forward pod measured in the Y direction (left is positive). This is also the xOffset value in _pinpoint.setOffsets(...)
+            .forwardPodY(6.625)          // robot width = 12.3125", forward pod is 8.5" from left. Distance = 12.3125/2 - 8.5 = -2.34375
+            // strafe pod measured in the X direction (forward is positive). This is also the yOffset value in _pinpoint.setOffsets(...)
+            .strafePodX(-0.125)           // robot length is 16", strafe pod is 9.4375" from front. Distance = 16/2 - 9.4375 = -1.4375
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
+            // The default directions of the forward encoder = FORWARD and strafe encoder = FORWARD.
+            // Because the pinpoint odometer computer is installed upside down, we need to set strafe encoder = REVERSED.
+            // run BurrritoTuning->Localization->Localization Test. Forward will yield positive x value, left will yield positive y value.
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
-            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);   // REVERSED because pinpoint is installed upside down
+
 
     public static PathConstraints pathConstraints = new PathConstraints(
-            0.995,
-            0.1,
-            0.1,
-            0.009,
-            50,
-            1.25,
-            10,
-            1
-    );
+            0.99,
+            100,
+            1.5,
+            1);
+
 
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
