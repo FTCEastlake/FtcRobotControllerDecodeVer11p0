@@ -73,7 +73,7 @@ public class BurrritoBasic extends LinearOpMode {
             // If any wheels rotate backwards then you have to revers the motor direction in
             // initRobot() and it's corresponding MecanumConstants.zzz parameters.
 
-            double power = gamepad1.left_stick_y * 0.25;
+            double power = -gamepad1.left_stick_y * 0.25;
             if (gamepad1.x) {
                 _leftFront.setTargetPosition(_leftFront.getCurrentPosition() + wheelEncoderVal);
                 _leftFront.setPower(power);
@@ -146,10 +146,10 @@ public class BurrritoBasic extends LinearOpMode {
 
         // Set directions of the motors.
         // Left motors should be the opposite of the right motors.
-        _rightFront.setDirection(DcMotorSimple.Direction.FORWARD);      // MecanumConstants.rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-        _rightRear.setDirection(DcMotorSimple.Direction.FORWARD);       // MecanumConstants.rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-        _leftFront.setDirection(DcMotorSimple.Direction.REVERSE);       // MecanumConstants.leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-        _leftRear.setDirection(DcMotorSimple.Direction.REVERSE);        // MecanumConstants.leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+        _rightFront.setDirection(DcMotorSimple.Direction.REVERSE);      // MecanumConstants.rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+        _rightRear.setDirection(DcMotorSimple.Direction.REVERSE);       // MecanumConstants.rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+        _leftFront.setDirection(DcMotorSimple.Direction.FORWARD);       // MecanumConstants.leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
+        _leftRear.setDirection(DcMotorSimple.Direction.FORWARD);        // MecanumConstants.leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
 
         // Gobilda pinpoint initialization
         initPinpoint();

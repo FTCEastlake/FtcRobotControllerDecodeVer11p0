@@ -42,7 +42,8 @@ public class EggTeleop extends LinearOpMode {
 //            if (gamepad2.bWasPressed())
 //                _intake.setOff();
 
-            _drive.driveFieldRelative(gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
+            //_drive.driveFieldRelative(gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
+            _drive.driveFieldRelative(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         }
 
     }
@@ -54,10 +55,10 @@ public class EggTeleop extends LinearOpMode {
 
         // We set the left motors in reverse which is needed for drive trains where the left
         // motors are opposite to the right ones.
-        DcMotor.Direction leftFrontDirection = DcMotor.Direction.FORWARD;
-        DcMotor.Direction leftRearDirection = DcMotor.Direction.FORWARD;
-        DcMotor.Direction rightFrontDirection =DcMotor.Direction.REVERSE;
-        DcMotor.Direction rightRearDirection = DcMotor.Direction.REVERSE;
+        DcMotor.Direction leftFrontDirection = DcMotor.Direction.REVERSE;
+        DcMotor.Direction leftRearDirection = DcMotor.Direction.REVERSE;
+        DcMotor.Direction rightFrontDirection =DcMotor.Direction.FORWARD;
+        DcMotor.Direction rightRearDirection = DcMotor.Direction.FORWARD;
 
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
         RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;

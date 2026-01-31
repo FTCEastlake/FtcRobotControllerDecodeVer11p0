@@ -20,15 +20,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class EggConstants {
     public static FollowerConstants followerConstants = new FollowerConstants()
 
-            // Lateral correction (BurrritoTuning->Manual->Translational Tuner)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.04, 0, 0.01, 0.03))   // coefficientsTranslationalPIDF
-            // Lateral correction (BurrritoTuning->Manual->Heading Tuner)
+            // Lateral correction (EggTuning->Manual->Translational Tuner)
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.04, 0, 0.02, 0.04))   // coefficientsTranslationalPIDF
+            // Lateral correction (EggTuning->Manual->Heading Tuner)
             .headingPIDFCoefficients(new PIDFCoefficients(0.7, 0, 0.01, 0.03))         // coefficientsHeadingPIDF
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.025, 0, 0.00001, 0.6, 0.01 )) // coefficientsDrivePIDF
             .centripetalScaling(0.0005)     // default = 0.0005
 
-            .forwardZeroPowerAcceleration(-33.41435813920928)   // run BurrritoTuning->Automatic->Forward Zero Power Acceleration Tuner
-            .lateralZeroPowerAcceleration(-41.18010230717188)   // run BurrritoTuning->Automatic->Lateral Zero Power Acceleration Tuner
+            .forwardZeroPowerAcceleration(-30.07895288040662)   // run EggTuning->Automatic->Forward Zero Power Acceleration Tuner
+            .lateralZeroPowerAcceleration(-61.01525516351456)   // run EggTuning->Automatic->Lateral Zero Power Acceleration Tuner
             .mass(11.5);     // mass is in kilograms (1kg = 2.20462 lbs)
 
 
@@ -38,19 +38,19 @@ public class EggConstants {
             .rightRearMotorName("rightRear")
             .leftRearMotorName("leftRear")
             .leftFrontMotorName("leftFront")
-            .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .xVelocity(65.94748717781127)   // run BurrritoTuning->Automatic->Forward Velocity Tuner
-            .yVelocity(54.202004259965555)  // run BurrritoTuning->Automatic->Lateral Velocity Tuner
+            .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .xVelocity(83.7366530050443)   // run EggTuning->Automatic->Forward Velocity Tuner
+            .yVelocity(67.18288968304012)   // run EggTuning->Automatic->Lateral Velocity Tuner
             .useBrakeModeInTeleOp(true);    // enables active braking during TeleOp in Pedro Pathing, helping the robot resist unwanted drift when no movement is commanded.
 
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             // Note, we designate the reference point as front center of the robot, not the actual center of the robot.
             // forward pod measured in the Y direction (left is positive). This is also the xOffset value in _pinpoint.setOffsets(...)
-            .forwardPodY(6.625)          // robot width = 12.3125", forward pod is 8.5" from left. Distance = 12.3125/2 - 8.5 = -2.34375
+            .forwardPodY(-6.625)          // robot width = 12.3125", forward pod is 8.5" from left. Distance = 12.3125/2 - 8.5 = -2.34375
             // strafe pod measured in the X direction (forward is positive). This is also the yOffset value in _pinpoint.setOffsets(...)
             .strafePodX(-0.125)           // robot length is 16", strafe pod is 9.4375" from front. Distance = 16/2 - 9.4375 = -1.4375
             .distanceUnit(DistanceUnit.INCH)
@@ -58,9 +58,9 @@ public class EggConstants {
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
             // The default directions of the forward encoder = FORWARD and strafe encoder = FORWARD.
             // Because the pinpoint odometer computer is installed upside down, we need to set strafe encoder = REVERSED.
-            // run BurrritoTuning->Localization->Localization Test. Forward will yield positive x value, left will yield positive y value.
-            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
-            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);   // REVERSED because pinpoint is installed upside down
+            // run EggTuning->Localization->Localization Test. Forward will yield positive x value, left will yield positive y value.
+            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
 
     public static PathConstraints pathConstraints = new PathConstraints(
